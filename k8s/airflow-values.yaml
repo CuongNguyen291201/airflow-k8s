@@ -1,0 +1,27 @@
+# Dùng KubernetesExecutor — mỗi task = 1 Pod riêng
+executor: KubernetesExecutor
+
+# Kết nối Airflow tới PostgreSQL metadata DB
+# (dùng PostgreSQL vừa cài ở trên làm metadata store)
+data:
+  metadataConnection:
+    user: airflow_user
+    pass: airflow_pass
+    host: airflow-postgres-postgresql.airflow.svc.cluster.local
+    port: 5432
+    db: civil_service_db
+
+# Tắt các component không cần cho học
+flower:
+  enabled: false
+
+# Cho phép Airflow tạo Pod mới khi chạy task
+workers:
+  replicas: 0          # KubernetesExecutor không cần worker thường trực
+
+# Mount thư mục DAGs (dùng gitSync trong production, dùng emptyDir khi dev)
+dags:
+  persistence:
+    enabled: false
+  gitSync:
+    enabled: false
